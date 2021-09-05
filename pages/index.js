@@ -4,7 +4,7 @@ export default function Home({ isConnected }) {
   return <div className="container">test {isConnected}</div>;
 }
 
-export async function getServerSideProps(context) {
+export async function getStaticProps(context) {
   const client = await clientPromise;
 
   // client.db() will be the default database passed in the MONGODB_URI
