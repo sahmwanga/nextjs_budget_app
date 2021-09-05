@@ -1,7 +1,22 @@
 import clientPromise from '../lib/mongodb';
 
-export default function Home({ isConnected }) {
-  return <div className="container">test {isConnected}</div>;
+export default function Home({ expenses }) {
+  return (
+    <div className="container">
+      <ul>
+        {expenses.map((value) => (
+          <div key={value._id}>
+            <li>{value._id}</li>
+            <div>{value.description}</div>
+            <div>{value.amount}</div>
+            <div>{value.category}</div>
+            <div>{value.datetime}</div>
+            <br />
+          </div>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 export async function getStaticProps(context) {
@@ -13,11 +28,12 @@ export async function getStaticProps(context) {
   // Then you can execute queries against your database like so:
   // db.find({}) or any of the MongoDB Node Driver commands
 
-  const isConnected = await client.isConnected();
+  const db = await client.db('budget_application');
+  const data = await db.collection('expenses').find({}).toArray();
 
-  console.log({ isConnected });
+  // console.log({ client: data[0].description });
 
   return {
-    props: { isConnected },
+    props: { expenses: JSON.parse(JSON.stringify(data)) },
   };
 }
